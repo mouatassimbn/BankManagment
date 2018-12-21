@@ -16,8 +16,9 @@
 					 ---------Add the history of bank menu -> v
 					 ----------Deleted account menu  -> v
 					 -----------Make the bank profit -> v
-					 ------------Loan history -> x
-					 ------------Make a histoory menu that groups every history.... -> x
+					 ------------Loan history -> v
+					 ------------Make a histoory menu that groups every history.... -> v
+					 ------------Oprimize the loan mecanisme -> x
 */
 #include <iostream>
 #include <iomanip>
@@ -86,19 +87,16 @@ int main(void) {
 			<< "\t\t\t\t2 - Update information of existing account" << endl
 			<< "\t\t\t\t3 - Check the details of existing account" << endl
 			<< "\t\t\t\t4 - Removing existing account" << endl
-			<< "\t\t\t\t5 - View customer's list" << endl
-			<< "\t\t\t\t6 - Transactions" << endl
-			<< "\t\t\t\t7 - All transactions history" << endl
-			<< "\t\t\t\t8 - Deleted accounts" << endl
-			<< "\t\t\t\t9 - Loans" << endl
-			<< "\t\t\t\t10 - Loans history" << endl
-			<< "\t\t\t\t12 - About us" << endl
-			<< "\t\t\t\t13 - Exit \n\n" << endl;
+			<< "\t\t\t\t5 - Transactions" << endl
+			<< "\t\t\t\t6 - History Ledger" << endl
+			<< "\t\t\t\t7 - Loans" << endl
+			<< "\t\t\t\t8 - About us" << endl
+			<< "\t\t\t\t9 - Exit \n\n" << endl;
 
-		cout << "\t\t\tEnter your choice (1,2,3,4,5,6,7,8,9,10,11 or 13): "; // ask the user to input his choics
+		cout << "\t\t\tEnter your choice (1,2,3,4,5,6,7,8 or 9): "; // ask the user to input his choics
 		cin >> choiceMain; // input of user
 
-		while (!cin || choiceMain < 1 || choiceMain > 14) { // verify if the user entered valid choices
+		while (!cin || choiceMain < 1 || choiceMain > 10) { // verify if the user entered valid choices
 			cin.clear(); // clears error flags
 			cin.ignore(); // ignore next new line
 			cout << "\t\t\t[ERROR] : Your choice seems to not be available..." << endl // ourput error text
@@ -106,7 +104,7 @@ int main(void) {
 			cin >> choiceMain; // input of user
 		}
 
-		if (choiceMain != 13) { // verify if the user doesn't want to quit the program
+		if (choiceMain != 9) { // verify if the user doesn't want to quit the program
 
 			system("cls"); // clears the screen
 
@@ -118,8 +116,8 @@ int main(void) {
 
 				// info about the bank and welcome text
 				cout << "\t\t\t Welcome new client! we're glad that you decided to creat an account with our bank..." << endl
-					 << "\t\t\t MSBN is one of the biggest banks in canada and our mission is always earning the right to be our clients’ first choice" << endl
-					 << "\n\t\t\t We need you to enter some personal informations about you. \n\n\n" << endl;
+					<< "\t\t\t MSBN is one of the biggest banks in canada and our mission is always earning the right to be our clients’ first choice" << endl
+					<< "\n\t\t\t We need you to enter some personal informations about you. \n\n\n" << endl;
 
 				do {
 					cin.clear(); // clears error flags
@@ -166,13 +164,13 @@ int main(void) {
 				} while (allInfoCorrect == 'N'); // repeat if the input of user is NO
 				// output after the user answering yes
 				cout << "By answering (Yes): i've verified all the info above and they're my real and valid info.." << endl
-					 << "Your account is getting created at the moment" << endl
-					 << "Please be patient for a moment..." << endl 
-					 << "\n\n\n-> you will receive your account number shortly. And you will proceed into the last step..." << endl;
-				
+					<< "Your account is getting created at the moment" << endl
+					<< "Please be patient for a moment..." << endl
+					<< "\n\n\n-> you will receive your account number shortly. And you will proceed into the last step..." << endl;
+
 				listOfClients[numClient].m_accountNumber = returnAccountNumber(); // assign the returned number to the account number member of the client
 				Sleep(1200); // sleep for 1.2s
-				
+
 				// output that the process is done and ouput the account number
 				cout << "\n=== Done === \n" << endl
 					<< "Your acount number is : " << listOfClients[numClient].m_accountNumber << endl << endl;
@@ -190,7 +188,7 @@ int main(void) {
 
 				Sleep(1200); // sleep for 1.2s
 				cout << "\n\nThank you for creating your account with us !!!" << endl // output the thank you text...
-					 << " -> Please remember your account number and password...\n\n" << endl;
+					<< " -> Please remember your account number and password...\n\n" << endl;
 				listOfClients[numClient].m_accountBalance = savingsRates(listOfClients[numClient]);
 				listOfClients[numClient].m_timeOfCreation = getTime();
 				numClient++; // adds one to the num cients
@@ -203,7 +201,7 @@ int main(void) {
 				tries = 0; // reset tries variable to 0
 				do {
 					system("cls"); // clear thee screen
-				    cout << "\t\t\t\t\t===== Modifies the details of existing account ===== \n\n\n" << endl; // title of menu
+					cout << "\t\t\t\t\t===== Modifies the details of existing account ===== \n\n\n" << endl; // title of menu
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // output error
@@ -294,7 +292,7 @@ int main(void) {
 				do {
 					system("cls"); // clear the screen
 					cout << "\t\t\t\t\t===== Check the details of existing account ===== \n\n\n" << endl; // title of menu
-				
+
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // ouput error text
@@ -309,14 +307,14 @@ int main(void) {
 						if (accountNum == listOfClients[i].m_accountNumber && pwd == listOfClients[i].m_password) { // verify if inputs of user equal to the info of an existing account
 							system("cls"); // clears screen
 							// ouputs account info
-							cout << "=== Welcome " << listOfClients[i].m_name << " ====" << endl; 
+							cout << "=== Welcome " << listOfClients[i].m_name << " ====" << endl;
 							cout << "\n\nYour full name -> " << listOfClients[i].m_name << endl
 								<< "Your adress -> " << listOfClients[i].m_adress << endl
 								<< "Your NAS number -> " << listOfClients[i].m_nasNumber << endl
 								<< "Your phone number -> " << listOfClients[numClient].m_phoneNumber << endl
 								<< "You have a " << listOfClients[i].m_typeOfAccount << " account." << endl
 								<< "Your balance is " << fixed << setprecision(2) << listOfClients[i].m_accountBalance << " $" << endl;
-							
+
 							found = true; // set found to true
 							break; // break from loop
 						}
@@ -355,14 +353,14 @@ int main(void) {
 								<< "You have a " << listOfClients[i].m_typeOfAccount << " account." << endl
 								<< "Your balance is " << fixed << setprecision(2) << listOfClients[i].m_accountBalance << " $" << endl;
 							cout << "\n\n\t[WARNING] : If you leave any balance in your account, when you delete it. It will be kept by the bank until we find a solution !!" << endl;
-							
+
 							cout << "\n\nDo you really want to remove your account ((Y)es or (N)o)? "; // ask the user if he want to remouve account...
 							if (verifyInfoCorrect('Y', 'N') == 'Y') { // verify the input of user is equal to y;
 								// put reason to delete account...
 								cin.clear(); // clears error flags
 								cin.ignore(); // ignore next new line
 								cout << "===== Please enter the reason you wanna delete your account : ======\n" << endl;
-								getline(cin,listOfClients[i].m_reasonOfDeletion);
+								getline(cin, listOfClients[i].m_reasonOfDeletion);
 								cout << "\n====================================================================" << endl;
 								// end of reason
 
@@ -382,7 +380,7 @@ int main(void) {
 						}
 						else // if not
 							found = false; // set found to false
-					} 
+					}
 
 					cout << "\n\nDo you wanna retry((Y)es or (N)o) : "; // ask the user if all the info above are correct
 					allInfoCorrect = verifyInfoCorrect('Y', 'N'); // assign the valid returned value to the variable 
@@ -392,24 +390,9 @@ int main(void) {
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 5: // menu 5 : show costumers list...
-				cout << "\t\t\t\t\t===== Our costumers ===== \n\n\n" << endl; // title of menu
-
-				cout << "\n\t[NUMBER CLIENTS] : " << listOfClients.size() << "\n\n" << endl; // ouput number of clients
-
-				for (size_t i = 0; i < listOfClients.size(); i++) { // loop through the list of clients...
-					// output every account info
-					cout << "\t\tClient # " << (i + 1) << "\t|\t" << listOfClients[i].m_accountNumber << "\t|\t" << listOfClients[i].m_name << "\t|\t" << listOfClients[i].m_typeOfAccount << " | " << fixed << setprecision(2) << listOfClients[i].m_accountBalance << " $" << endl
-						<< "\t\t -> Time of creation : " << listOfClients[i].m_timeOfCreation << endl;
-				}
-
-				cout << "\n\n" << endl; // skip lines
-				system("PAUSE"); // pause the program
-				break; // break from menu
-
-			case 6: // menu 6 : transfer money...
+			case 5: // menu 5 : transfer money...
 				tries = 0; // reset the tries value to 0
-				
+
 				do {
 					system("cls"); // clear the screen
 					cout << "\t\t\t\t\t===== transfer money ===== \n\n\n" << endl;  // title of menu
@@ -442,7 +425,7 @@ int main(void) {
 									if (listOfClients[j].m_accountNumber == receiver) { // verify if the account of the reciever exists
 										transaction = transferTheMoney(listOfClients[i], amount, listOfClients[j], MSBN); // call the transfer the money fonction and assign the return to th variable
 										break; // break from the loop
-									} 
+									}
 									else { // if not
 										transaction = false; // set the transaction into true
 									}
@@ -481,34 +464,96 @@ int main(void) {
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 7: // menu 7 : transfers history...
-				cout << "\t\t\t\t\t===== transfers history ===== \n\n\n" << endl;  // title of menu
+			case 6: // menu 6 : ledger
+				do {
+					system("cls"); // clears the screen
+					cout << "\t\t\t\t\t===== Histores ===== \n\n\n" << endl;  // title of menu
 
-				for (size_t i = 0; i < transferHistory.size(); i++) { // loops through transfers history array
-					cout << transferHistory[i] << endl; // ouput transfers info
-				}
+					cout << "\t====Please Pick a history : ====\n" << endl
+						<< "\t1 - Costumers list" << endl
+						<< "\t2 - Transfers" << endl
+						<< "\t3 - Deleted accounts" << endl
+						<< "\t4 - Loans" << endl
+						<< "\t5 - Exit menu" << endl;
+					cout << "\n Enter your choice (1,2,3,4 or 5) : ";
+					cin >> choice;
+
+					while (!cin || choice < 1 || choice > 5) { // verify if the user entered valid choices
+						cin.clear(); // clears error flags
+						cin.ignore(); // ignore next new line
+						cout << "\t\t\t[ERROR] : Your choice seems to not be available..." << endl // ourput error text
+							<< "\t\t\t-> Please enter new choice : "; // asks the user for new input
+						cin >> choice; // input of user
+					}
+
+					if(choice != 5) {
+						system("cls"); // clears the screen
+
+						switch (choice) {
+						case 1: // Costumer list
+							cout << "\t\t\t\t\t===== Our costumers ===== \n\n\n" << endl; // title of menu
+
+							cout << "\n\t[NUMBER CLIENTS] : " << listOfClients.size() << "\n\n" << endl; // ouput number of clients
+
+							for (size_t i = 0; i < listOfClients.size(); i++) { // loop through the list of clients...
+								// output every account info
+								cout << "\t\tClient # " << (i + 1) << "\t|\t" << listOfClients[i].m_accountNumber << "\t|\t" << listOfClients[i].m_name << "\t|\t" << listOfClients[i].m_typeOfAccount << " | " << fixed << setprecision(2) << listOfClients[i].m_accountBalance << " $" << endl
+									<< "\t\t -> Time of creation : " << listOfClients[i].m_timeOfCreation << endl;
+							}
+
+							cout << "\n\n" << endl; // skip lines
+							system("PAUSE"); // pause the program
+							break; // break from menu
+
+						case 2: // transfers history
+							cout << "\t\t\t\t\t===== transfers history ===== \n\n\n" << endl;  // title of menu
+
+							for (size_t i = 0; i < transferHistory.size(); i++) { // loops through transfers history array
+								cout << transferHistory[i] << endl; // ouput transfers info
+							}
+
+							cout << "\n\n" << endl; // skip lines
+							system("PAUSE"); // pause the program
+							break; // break from menu
+
+						case 3: // Deleted accounts
+							cout << "\t\t\t\t\t===== Deleted Accounts ===== \n\n\n" << endl;  // title of menu
+
+							cout << "\n\t[NUMBER DELETED ACCOUNT] : " << listOfDeletedAccounts.size() << "\n\n" << endl; // ouput number of clients
+
+							for (size_t i = 0; i < listOfDeletedAccounts.size(); i++) { // loop through the list of clients...
+								// output every account info
+								cout << "\t\tClient # " << (i + 1) << "\t|\t" << listOfDeletedAccounts[i].m_accountNumber << "\t|\t" << listOfDeletedAccounts[i].m_name << "\t|\t" << listOfDeletedAccounts[i].m_typeOfAccount << " | " << fixed << setprecision(2) << listOfDeletedAccounts[i].m_accountBalance << " $" << endl
+									<< "\t\t -> Time of creation : " << listOfDeletedAccounts[i].m_timeOfCreation << "\t|\t Time of deletion : " << listOfDeletedAccounts[i].m_timeOfDelete << endl
+									<< "\t\t  -> Reason of deletion : " << listOfDeletedAccounts[i].m_reasonOfDeletion << " |" << endl;
+							}
+
+							cout << "\n\n" << endl; // skip lines
+							system("PAUSE"); // pause program
+							break; // break from menu
+
+
+						case 4: // Loans history
+							cout << "\t\t\t\t\t===== Loans  history ===== \n\n\n" << endl;  // title of menu
+
+							cout << "\n\t[NUMBER OF LOANS] : " << loansHistory.size() << "\n\n" << endl; // ouput number of clients
+							for (size_t i = 0; i < loansHistory.size(); i++) {
+								cout << "\t\t" << loansHistory[i] << endl;
+							}
+
+							cout << "\n\n" << endl; // skip lines
+							system("PAUSE"); // pause program
+							break; // break from menu
+						};
+					}
+
+				} while (choice != 5);
 
 				cout << "\n\n" << endl; // skip lines
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 8: // menu 8: deleted accounts
-				cout << "\t\t\t\t\t===== transfers history ===== \n\n\n" << endl;  // title of menu
-
-				cout << "\n\t[NUMBER DELETED ACCOUNT] : " << listOfDeletedAccounts.size() << "\n\n" << endl; // ouput number of clients
-
-				for (size_t i = 0; i < listOfDeletedAccounts.size(); i++) { // loop through the list of clients...
-					// output every account info
-					cout << "\t\tClient # " << (i + 1) << "\t|\t" << listOfDeletedAccounts[i].m_accountNumber << "\t|\t" << listOfDeletedAccounts[i].m_name << "\t|\t" << listOfDeletedAccounts[i].m_typeOfAccount << " | " << fixed << setprecision(2) << listOfDeletedAccounts[i].m_accountBalance << " $" << endl
-						<< "\t\t -> Time of creation : " << listOfDeletedAccounts[i].m_timeOfCreation << "\t|\t Time of deletion : " << listOfDeletedAccounts[i].m_timeOfDelete << endl
-						<< "\t\t  -> Reason of deletion : " << listOfDeletedAccounts[i].m_reasonOfDeletion << " |"<< endl;
-				}
-
-				cout << "\n\n" << endl; // skip lines
-				system("PAUSE"); // pause program
-				break; // break from menu
-				
-			case 9: // menu 9 : loan menu
+			case 7: // menu 7 : loan menu
 				tries = 0; // reset the tries to 0;
 				do {
 					system("cls"); // clear the screen
@@ -572,24 +617,14 @@ int main(void) {
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 10: // menu 10 : loan history
-				cout << "\t\t\t\t\t===== Loans  history ===== \n\n\n" << endl;  // title of menu
-				cout << "\n\t[NUMBER OF LOANS] : " << loansHistory.size() << "\n\n" << endl; // ouput number of clients
-				for (size_t i = 0; i < loansHistory.size(); i++) {
-					cout << "\t\t" << loansHistory[i] << endl;
-				}
-				cout << "\n\n" << endl; // skip lines
-				system("PAUSE"); // pause program
-				break; // break from menu
-
-			case 11 : // menu 11 : about us
+			case 8 : // menu 8 : about us
 				historyOfBank(); // call of function about us
 
 				cout << "\n\n" << endl; // skip lines
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 14: // hidden menu : MSBN account
+			case 10: // hidden menu : MSBN account
 				cout << "\t\t\t\t\t===== MSBN ACCOUNT ===== \n\n\n" << endl;  // title of menu
 				cout << "\n\n[NAME] -> " << MSBN.m_name << endl
 					<< "[TYPE OF ACCOUNT] --> " << MSBN.m_typeOfAccount << endl
@@ -601,7 +636,7 @@ int main(void) {
 				break; // break from menu
 			};
 		}
-	} while (choiceMain != 13);
+	} while (choiceMain != 9);
 
 
 
