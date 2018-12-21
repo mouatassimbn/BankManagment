@@ -92,13 +92,14 @@ int main(void) {
 			<< "\t\t\t\t7 - All transactions history" << endl
 			<< "\t\t\t\t8 - Deleted accounts" << endl
 			<< "\t\t\t\t9 - Loans" << endl
-			<< "\t\t\t\t10 - About us" << endl
-			<< "\t\t\t\t11 - Exit \n\n" << endl;
+			<< "\t\t\t\t10 - Loans history" << endl
+			<< "\t\t\t\t12 - About us" << endl
+			<< "\t\t\t\t13 - Exit \n\n" << endl;
 
-		cout << "\t\t\tEnter your choice (1,2,3,4,5,6,7,8,9,10 or 11): "; // ask the user to input his choics
+		cout << "\t\t\tEnter your choice (1,2,3,4,5,6,7,8,9,10,11 or 13): "; // ask the user to input his choics
 		cin >> choiceMain; // input of user
 
-		while (!cin || choiceMain < 1 || choiceMain > 12) { // verify if the user entered valid choices
+		while (!cin || choiceMain < 1 || choiceMain > 14) { // verify if the user entered valid choices
 			cin.clear(); // clears error flags
 			cin.ignore(); // ignore next new line
 			cout << "\t\t\t[ERROR] : Your choice seems to not be available..." << endl // ourput error text
@@ -106,7 +107,7 @@ int main(void) {
 			cin >> choiceMain; // input of user
 		}
 
-		if (choiceMain != 11) { // verify if the user doesn't want to quit the program
+		if (choiceMain != 13) { // verify if the user doesn't want to quit the program
 
 			system("cls"); // clears the screen
 
@@ -201,8 +202,9 @@ int main(void) {
 
 			case 2: // menu 2 : Update information of existing account
 				tries = 0; // reset tries variable to 0
-				cout << "\t\t\t\t\t===== Modifies the details of existing account ===== \n\n\n" << endl; // title of menu
 				do {
+					system("cls"); // clear thee screen
+				    cout << "\t\t\t\t\t===== Modifies the details of existing account ===== \n\n\n" << endl; // title of menu
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // output error
@@ -290,8 +292,10 @@ int main(void) {
 
 			case 3: // menu 3 : check information on account 
 				tries = 0; // reset tries to 0
-				cout << "\t\t\t\t\t===== Check the details of existing account ===== \n\n\n" << endl; // title of menu
 				do {
+					system("cls"); // clear the screen
+					cout << "\t\t\t\t\t===== Check the details of existing account ===== \n\n\n" << endl; // title of menu
+				
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // ouput error text
@@ -330,9 +334,10 @@ int main(void) {
 				break; // break from menu
 
 			case 4:  // remove an account...
-				cout << "\t\t\t\t\t===== remove an account account ===== \n\n\n" << endl; // title of menu
 				tries = 0; // reset tries to 0
 				do {
+					system("cls"); // clear the screen
+					cout << "\t\t\t\t\t===== remove an account account ===== \n\n\n" << endl; // title of menu
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // output error text
@@ -405,8 +410,10 @@ int main(void) {
 
 			case 6: // menu 6 : transfer money...
 				tries = 0; // reset the tries value to 0
-				cout << "\t\t\t\t\t===== transfer money ===== \n\n\n" << endl;  // title of menu
+				
 				do {
+					system("cls"); // clear the screen
+					cout << "\t\t\t\t\t===== transfer money ===== \n\n\n" << endl;  // title of menu
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // ouput error text
@@ -503,9 +510,10 @@ int main(void) {
 				break; // break from menu
 				
 			case 9: // menu 9 : loan menu
-				cout << "\t\t\t\t\t===== Loans ===== \n\n\n" << endl;  // title of menu
-
+				tries = 0; // reset the tries to 0;
 				do {
+					system("cls"); // clear the screen
+					cout << "\t\t\t\t\t===== Loans ===== \n\n\n" << endl;  // title of menu
 
 					if (!found) // verify if found is false
 						cout << "[ERROR] : The info entered doesn't match any of our accounts" << endl; // ouput error text
@@ -537,6 +545,7 @@ int main(void) {
 							else { // loan is granted
 								MSBN.m_accountBalance -= listOfClients[i].m_loanBalance; // the loan is granted...
 								listOfClients[i].m_accountBalance += listOfClients[i].m_loanBalance; // add the amount to the balance
+								MSBN.m_loanBalance += listOfClients[i].m_loanBalance; // addthe loan to the total of loans given by the bank
 								// output
 								cout << "\n\n[SUCESS] : you got a loan!!!" << endl
 									<< " -> Please be wise with the new money you got access to.." << endl
@@ -545,6 +554,8 @@ int main(void) {
 									<< "[INFO] : The loan can be taken back or changed anytime your financial situation changes" << endl
 									<< "[INFO] : You get a period with no interest -> 4 months" << endl
 									<< "[WARNING] : You're responsible for making the payments on time" << endl;
+								// log the loan in the history ledger
+								loansHistory.push_back("Account # " + to_string(listOfClients[i].m_accountNumber) + "\t|\t Took a loan of " + to_string(listOfClients[i].m_loanBalance) + " $ For" + listOfClients[i].m_reasonOfLoan + "\t|\n\t-> At : " + getTime());
 							}
 
 							found = true; // set found to true
@@ -562,25 +573,36 @@ int main(void) {
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 10 : // menu 9 : about us
+			case 10: // menu 10 : loan history
+				cout << "\t\t\t\t\t===== Loans  history ===== \n\n\n" << endl;  // title of menu
+				cout << "\n\t[NUMBER OF LOANS] : " << loansHistory.size() << "\n\n" << endl; // ouput number of clients
+				for (size_t i = 0; i < loansHistory.size(); i++) {
+					cout << "\t\t" << loansHistory[i] << endl;
+				}
+				cout << "\n\n" << endl; // skip lines
+				system("PAUSE"); // pause program
+				break; // break from menu
+
+			case 11 : // menu 11 : about us
 				historyOfBank(); // call of function about us
 
 				cout << "\n\n" << endl; // skip lines
 				system("PAUSE"); // pause program
 				break; // break from menu
 
-			case 12: // hidden menu : MSBN account
+			case 14: // hidden menu : MSBN account
 				cout << "\t\t\t\t\t===== MSBN ACCOUNT ===== \n\n\n" << endl;  // title of menu
 				cout << "\n\n[NAME] -> " << MSBN.m_name << endl
 					<< "[TYPE OF ACCOUNT] --> " << MSBN.m_typeOfAccount << endl
-					<< "[BALANCE] ---> " << MSBN.m_accountBalance << endl;
+					<< "[BALANCE] ---> " << MSBN.m_accountBalance << " $" << endl
+					<< "[TOTAL OF LOANS GIVEN] ----> " << MSBN.m_loanBalance << " $" << endl;
 
 				cout << "\n\n" << endl; // skip lines
 				system("PAUSE"); // pause program
 				break; // break from menu
 			};
 		}
-	} while (choiceMain != 11);
+	} while (choiceMain != 13);
 
 
 
