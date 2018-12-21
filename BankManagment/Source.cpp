@@ -17,14 +17,13 @@
 					 ----------Deleted account menu  -> v
 					 -----------Make the bank profit -> v
 					 ------------Loan history -> x
-					 ------------Make a histoory menu that groups every history....
+					 ------------Make a histoory menu that groups every history.... -> x
 */
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <vector>
 #include <ctime>
-#include <time.h>
 #include <Windows.h>
 #include <wchar.h>
 #include <cmath>
@@ -41,10 +40,10 @@ struct client { // struct of client
 	string m_timeOfDelete; // the time of deletion of account
 	string m_reasonOfDeletion; // stores the reason of deletion
 	string m_reasonOfLoan; // stores the reason of loan
-	double m_accountBalance; // The balance of the client
-	double m_loanBalance; // the loan
+	double m_accountBalance = 0.0; // The balance of the client
+	double m_loanBalance = 0.0; // the loan
 	int m_accountNumber; // the account number
-	int m_password; // the password of the account
+	int m_password ; // the password of the account
 	int m_timeOfsaving; //time that money will be blocked for
 };
 
@@ -594,8 +593,8 @@ int main(void) {
 				cout << "\t\t\t\t\t===== MSBN ACCOUNT ===== \n\n\n" << endl;  // title of menu
 				cout << "\n\n[NAME] -> " << MSBN.m_name << endl
 					<< "[TYPE OF ACCOUNT] --> " << MSBN.m_typeOfAccount << endl
-					<< "[BALANCE] ---> " << MSBN.m_accountBalance << " $" << endl
-					<< "[TOTAL OF LOANS GIVEN] ----> " << MSBN.m_loanBalance << " $" << endl;
+					<< "[BALANCE] ---> " << fixed << setprecision(2) << MSBN.m_accountBalance << " $" << endl
+					<< "[TOTAL OF LOANS GIVEN] ----> " << fixed << setprecision(2) << MSBN.m_loanBalance << " $" << endl;
 
 				cout << "\n\n" << endl; // skip lines
 				system("PAUSE"); // pause program
