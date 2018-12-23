@@ -19,6 +19,7 @@
 					 ------------Loan history -> v
 					 ------------Make a histoory menu that groups every history.... -> v
 					 ------------Oprimize the loan mecanisme -> x
+					 -------------Confirme the input of user at creation -> x
 */
 #include <iostream>
 #include <iomanip>
@@ -60,6 +61,8 @@ char verifyInfoCorrect(char choix1, char choix2); // verifies the choice of user
 string getTime();
 void historyOfBank();
 double savingsRates(client account);
+string verifyDegit(string &value, int min, int max);
+
 
 int main(void) {
 	client MSBN; // main bank account
@@ -73,8 +76,10 @@ int main(void) {
 	bool found = true, transaction = false; // initiats bool variables
 	double amount = 0; // initiats the amount to be stansfered
 	char allInfoCorrect = NULL; // bool if the info is correct
+
 	// start of output
 	system("color f5"); // change the color of the console to black-blue
+
 	do { // start of main menu
 		system("cls"); // clear the screen
 
@@ -135,6 +140,14 @@ int main(void) {
 					cout << "Enter your phone number : "; // asks the user for their phone number
 					getline(cin, listOfClients[numClient].m_phoneNumber); // gets the input of user
 
+					while (verifyDegit(listOfClients[numClient].m_phoneNumber, 10, 12).empty()) { // verify if the user entered valid choices
+						cin.clear(); // clears error flags
+						//cin.ignore(); // ignore next new line
+						cerr << "[ERROR] : This is not a valid number !" << endl;
+						cout << "Enter your phone number : "; // asks the user for their phone number
+						getline(cin, listOfClients[numClient].m_phoneNumber); // gets the input of user
+					}
+					
 					cout << "Enter your type of account ((C)hecking or (S)avings ): "; // asks the user wants a checking or savings account
 					if (verifyInfoCorrect('C', 'S') == 'C') // verify if the valid returned value of the function is equal to C
 						listOfClients[numClient].m_typeOfAccount = "Checkings"; // set the type of account to Checkings
@@ -508,6 +521,8 @@ int main(void) {
 						case 2: // transfers history
 							cout << "\t\t\t\t\t===== transfers history ===== \n\n\n" << endl;  // title of menu
 
+							cout << "\n\t[NUMBER TRANSFERS] : " << transferHistory.size() << "\n\n" << endl; // ouput number of transfers
+
 							for (size_t i = 0; i < transferHistory.size(); i++) { // loops through transfers history array
 								cout << transferHistory[i] << endl; // ouput transfers info
 							}
@@ -726,4 +741,24 @@ void historyOfBank()
 double savingsRates(client account)
 {
 	return account.m_accountBalance* pow((1 + SAVINGS_INTEREST / 100), account.m_timeOfsaving); // return the balance with interest
+}
+
+string verifyDegit(string &value, int min, int max)
+{
+		string response = "";
+		if (value.length() <= max && value.length() >= min) {
+			for (int i = 0; i < value.length(); i++) {
+				if ((int(value[i]) >= 48 && int(value[i]) <= 57) || int(value[i]) == 32) {
+					response = value;
+				}
+				else {
+					response = "\0";
+					break;
+				}
+			}
+		}
+		else {
+			return "\0";
+		}
+		return response;
 }
