@@ -66,6 +66,9 @@ double savingsRates(client account); // return the savings rate
 string verifyDegit(string &value, int min, int max); // verify if the input is a digit
 void SaveData(vector<string> transfer, vector<string> loan, vector<client> accounts, vector<client> deletedAccounts, client msbn); // save the data offline
 void getData(vector<string> &transfer, vector<string> &loan, vector<client> &accounts, vector<client> &deletedAccounts, client &bank, bool &over); // get the offline data
+string cryptData(string word);
+string unCryptData(string word);
+
 
 int main(void) {
 	client MSBN; // main bank account
@@ -83,6 +86,9 @@ int main(void) {
 	// start of output
 	system("color f5"); // change the color of the console to black-blue
 	getData(transferHistory, loansHistory, listOfClients, listOfDeletedAccounts, MSBN, over); // gat data from the files
+	if (over) {
+		return(0);
+	};
 
 	do { // start of main menu	
 		system("cls"); // clear the screen
@@ -128,7 +134,7 @@ int main(void) {
 
 				// info about the bank and welcome text
 				cout << "\t\t\t Welcome new client! we're glad that you decided to creat an account with our bank..." << endl
-					<< "\t\t\t MSBN is one of the biggest banks in canada and our mission is always earning the right to be our clients’ first choice" << endl
+					<< "\t\t\t MSBN is one of the biggest banks in canada, \n\t\t\t and our mission is always earning the right to be our clients’ first choice" << endl
 					<< "\n\t\t\t We need you to enter some personal informations about you. \n\n\n" << endl;
 
 				do {
@@ -688,8 +694,8 @@ int returnAccountNumber()
 {
 	int value = 0; // declare a value and inisitalize it to 0;
 
-	for (int i = 0; i < ((rand() % 100) + 5); i++) // loops until a random number between 5 and 100...
-		value = ((rand() % 9000000) + 100000); // get a random number between 1 000 000 and 10 000 000 and assign it to value
+		for (int i = 0; i < ((rand() % 100) + 5); i++) // loops until a random number between 5 and 100...
+			value = ((rand() % 9000000) + 100000); // get a random number between 1 000 000 and 10 000 000 and assign it to value
 
 	return value; // return the random account
 }
@@ -744,7 +750,7 @@ void historyOfBank()
 	cout << "Always earning the right to be our clients first choice"<< endl
 		 << "The MSBN History site has been created to remember and celebrate our heritage and the \ngenerations of men and women who transformed \nour company into a leader in Canada and a growing force in countries around the world." << endl
 		 << "Over the years we have invested in the future by delivering quality \nproducts, creating jobs, protecting the environment, \nrespecting diversity and making a difference in the communities that we serve.\nOur shared values of service, teamwork, responsibility, diversity and integrity \nhelp guide our behaviours and decisions, inspire us to lead in diversity and inclusion and define what it means to be a responsible corporate citizen." << endl
-		 << "Today, approximately 79, 000 client - focused and committed employees help us earn the right to be our clients’ first choice, \ndifferentiating us as an exceptional source of advice for the 16 million clients worldwide that we serve." << endl;
+		 << "Today, approximately 79, 000 client - \nfocused and committed employees help us earn the right to be our clients first choice, \ndifferentiating us as an exceptional source of advice for the 16 million clients worldwide that we serve." << endl;
 }
 
 double savingsRates(client account)
@@ -855,11 +861,11 @@ void SaveData(vector<string> transfer, vector<string> loan, vector<client> accou
 		loansFlux << endl; // output an empty line
 
 		// MSBN account
-		MSBNFlux << "$ Last modified -> " << getTime() << " ;" << endl; // output the last modified date
+		MSBNFlux << "$ Last modified -> " + getTime() + " ;" << endl; // output the last modified date
 		MSBNFlux << "--- === ---" << endl; // output a marker of beginning and end of data
 		MSBNFlux << msbn.m_name << endl; // ouput the name of account holder
-		MSBNFlux << msbn.m_typeOfAccount << endl; // output type of account
-		MSBNFlux << msbn.m_accountBalance << endl; // output the account balance
+		MSBNFlux << msbn.m_typeOfAccount<< endl; // output type of account
+		MSBNFlux << msbn.m_accountBalance<< endl; // output the account balance
 		MSBNFlux << msbn.m_accountNumber << endl; // ouput the account number
 		MSBNFlux << msbn.m_password << endl; // output the password of the account
 		MSBNFlux << msbn.m_timeOfCreation << endl; // output the time of creation
@@ -888,37 +894,37 @@ void SaveData(vector<string> transfer, vector<string> loan, vector<client> accou
 void getData(vector<string> &transfer, vector<string> &loan, vector<client> &accounts, vector<client> &deletedAccounts, client &bank, bool &over)
 {
 
-	const string transferHistory("Log/Transfer.txt");
-	const string loanHistory("Log/Loan.txt");
-	const string costumerList("Log/Accounts.txt");
-	const string deletedList("Log/Deleted.txt");
-	const string MSBN("Log/MSBN.txt");
+	const string transferHistory("Log/Transfer.txt"); // directory of transfer file
+	const string loanHistory("Log/Loan.txt"); // directory of loan log file
+	const string costumerList("Log/Accounts.txt"); // directory of accounts file
+	const string deletedList("Log/Deleted.txt"); // directory of deleted acounts file
+	const string MSBN("Log/MSBN.txt"); // directory of main account file
 
-	ifstream transfersFlux(transferHistory.c_str(), ios::app);
-	ifstream loansFlux(loanHistory.c_str(), ios::app);
-	ifstream costumersFlux(costumerList.c_str(), ios::app);
-	ifstream deletedFlux(deletedList.c_str(), ios::app);
-	ifstream MSBNFlux(MSBN.c_str(), ios::app);
+	ifstream transfersFlux(transferHistory.c_str(), ios::app); // open/creat file if there isn't one
+	ifstream loansFlux(loanHistory.c_str(), ios::app); // open/creat file if there isn't one
+	ifstream costumersFlux(costumerList.c_str(), ios::app); // open/creat file if there isn't one
+	ifstream deletedFlux(deletedList.c_str(), ios::app); // open/creat file if there isn't one
+	ifstream MSBNFlux(MSBN.c_str(), ios::app); // open/creat file if there isn't one
 
 	if (transfersFlux && loansFlux && costumersFlux && deletedFlux && MSBNFlux) {
 
-		string num = "";
-		string verifyBegining = "";
-		string line = "";
-		string dump = "";
-		int round = 0;
+		// declare variables and initialize them
+		string num = "";  // stores the num of accounts/transaction/loans
+		string verifyBegining = ""; // stores the first line
+		string line = ""; // stores a line
+		string dump = ""; // stores a line to be dumped
 
 
 		// list of clients...
-		getline(costumersFlux, num);
-		if (num != "\0") {
-			getline(costumersFlux, dump);
-			for (int i = 0; i <= stoi(num); i++) {
-				getline(costumersFlux, verifyBegining);
-				if (verifyBegining[0] == '-') {
-					accounts.push_back(client());
-					getline(costumersFlux, line);
-					accounts[i].m_accountNumber = stoi(line);
+		getline(costumersFlux, num); // gets the first line containing the number of accounts
+		if (num != "\0") { // verify if the first line is empty
+			getline(costumersFlux, dump); // dumps the line containing the last modified
+			for (int i = 0; i <= stoi(num); i++) { // loops throught the accounts
+				getline(costumersFlux, verifyBegining); // get the first line after the dump
+				if (verifyBegining[0] == '-') { // verify if the first character is equal to '-'
+					accounts.push_back(client()); // push an empty account
+					getline(costumersFlux, line); // get a line
+					accounts[i].m_accountNumber = stoi(line); // turn the string into in int and assign it to account number
 					getline(costumersFlux, accounts[i].m_name);
 					getline(costumersFlux, accounts[i].m_nasNumber);
 					getline(costumersFlux, accounts[i].m_adress);
@@ -936,21 +942,21 @@ void getData(vector<string> &transfer, vector<string> &loan, vector<client> &acc
 					accounts[i].m_timeOfsaving = stoi(line);
 					getline(costumersFlux, accounts[i].m_timeOfCreation);
 					getline(costumersFlux, accounts[i].m_timeOfDelete);
-					getline(costumersFlux, dump);
+					getline(costumersFlux, dump); // dump this line
 				}
 			}
 		}
 		
 		// list of deleted accounts...
-		getline(deletedFlux, num);
-		if (num != "\0") {
-			getline(deletedFlux, dump);
-			for (int i = 0; i <= stoi(num); i++) {
-				getline(deletedFlux, verifyBegining);
-				if (verifyBegining[0] == '-') {
-					deletedAccounts.push_back(client());
-					getline(deletedFlux, line);
-					deletedAccounts[i].m_accountNumber = stoi(line);
+		getline(deletedFlux, num); // gets the first line containing the number of accounts
+		if (num != "\0") { // verify if the first line isn't empty
+			getline(deletedFlux, dump); // dump the secound line
+			for (int i = 0; i <= stoi(num); i++) { // loop throught the deleted accounts
+				getline(deletedFlux, verifyBegining); // get the first line after the dump
+				if (verifyBegining[0] == '-') { // verify if that line's first character is equal to '-'
+					deletedAccounts.push_back(client()); // push a new client into the deleted accounts
+					getline(deletedFlux, line); // get thee first line 
+					deletedAccounts[i].m_accountNumber = stoi(line); // turn it into a string then assign it to account struct
 					getline(deletedFlux, deletedAccounts[i].m_name);
 					getline(deletedFlux, deletedAccounts[i].m_nasNumber);
 					getline(deletedFlux, deletedAccounts[i].m_adress);
@@ -1025,3 +1031,36 @@ void getData(vector<string> &transfer, vector<string> &loan, vector<client> &acc
 	}
 
 }
+
+string cryptData(string word)
+{
+	string result = "";
+	string lettre = "";
+	int numWord = 0;
+	char cara = NULL;
+	const string FIRST_HASH = "/@Si!de18";
+	const string SECOUND_WORD = "@#$$#^&";
+	const int FIRST_NUM = 532849994;
+
+
+	result = word.insert((word.length() / 2), SECOUND_WORD);
+	result = word.insert((0), FIRST_HASH);
+	result = word.insert((word.length()), FIRST_HASH);
+
+	for (int i = 0; i < result.length(); i++) {
+
+		cara = result[i];
+		numWord += (cara + FIRST_NUM);
+		lettre += to_string(numWord);
+
+	}
+
+	//cout << lettre << endl;
+
+	return lettre;
+}
+string unCryptData(string word)
+{
+	return string();
+}
+;
