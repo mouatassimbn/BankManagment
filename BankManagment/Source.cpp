@@ -19,7 +19,8 @@
 					 ------------Loan history -> v
 					 ------------Make a histoory menu that groups every history.... -> v
 					 ------------Oprimize the loan mecanisme -> x
-					 -------------Confirme the input of user at creation -> x
+					 -------------Confirme the input of user at creation of an account -> x
+					 --------------Crypte the offline saved data -> x
 */
 #include <iostream>
 #include <iomanip>
@@ -29,6 +30,7 @@
 #include <Windows.h>
 #include <wchar.h>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 // structs
@@ -62,7 +64,8 @@ string getTime();
 void historyOfBank();
 double savingsRates(client account);
 string verifyDegit(string &value, int min, int max);
-
+void SaveData(vector<string> transfer, vector<string> loan, vector<client> accounts, vector<client> deletedAccounts);
+void getData(vector<string> &transfer, vector<string> &loan, vector<client> &accounts, vector<client> &deletedAccounts);
 
 int main(void) {
 	client MSBN; // main bank account
@@ -72,15 +75,16 @@ int main(void) {
 	vector<client> listOfDeletedAccounts; // vector of struct clients : it stored deleted accounts
 	vector<string> transferHistory; // vector of strings : it stores the history of transactions
 	vector<string> loansHistory;
-	int choiceMain = 0, numClient = 0, accountNum = 0, pwd = 0, tries = 0, choice = 0, receiver = 0; // initates int variables
+	int choiceMain = 0, numClient = listOfClients.size(), accountNum = 0, pwd = 0, tries = 0, choice = 0, receiver = 0; // initates int variables
 	bool found = true, transaction = false; // initiats bool variables
 	double amount = 0; // initiats the amount to be stansfered
 	char allInfoCorrect = NULL; // bool if the info is correct
 
 	// start of output
 	system("color f5"); // change the color of the console to black-blue
-
-	do { // start of main menu
+	getData(transferHistory, loansHistory, listOfClients, listOfDeletedAccounts); // save in the files
+	//SaveData(transferHistory, loansHistory, listOfClients, listOfDeletedAccounts); // open files
+	do { // start of main menu	
 		system("cls"); // clear the screen
 
 		// output main menu...
@@ -137,7 +141,7 @@ int main(void) {
 					cout << "Enter your adress : "; // asks thee user for their Adress
 					getline(cin, listOfClients[numClient].m_adress); // get the input of user
 
-					cout << "Enter your phone number : "; // asks the user for their phone number
+					cout << "Enter your phone number (Only numbers) : "; // asks the user for their phone number
 					getline(cin, listOfClients[numClient].m_phoneNumber); // gets the input of user
 
 					while (verifyDegit(listOfClients[numClient].m_phoneNumber, 10, 12).empty()) { // verify if the user entered valid choices
@@ -653,7 +657,8 @@ int main(void) {
 		}
 	} while (choiceMain != 9);
 
-
+	// save all the data
+	SaveData(transferHistory, loansHistory, listOfClients, listOfDeletedAccounts); // save in the files
 
 	// end of program
 	cout << "\n\n\n\t\t\tThank you for using a MSBN Bank program...\n\n" << endl; // ouput end of program text
@@ -761,4 +766,182 @@ string verifyDegit(string &value, int min, int max)
 			return "\0";
 		}
 		return response;
+}
+
+void SaveData(vector<string> transfer, vector<string> loan, vector<client> accounts, vector<client> deletedAccounts)
+{
+	const string transferHistory("Log/Transfer.txt");
+	const string loanHistory("Log/Loan.txt");
+	const string costumerList("Log/Accounts.txt");
+	const string deletedList("Log/Deleted.txt");
+
+	ofstream transfersFlux(transferHistory.c_str(), ios::app);
+	ofstream loansFlux(loanHistory.c_str(), ios::app);
+	ofstream costumersFlux(costumerList.c_str(), ios::out | ios::trunc);
+	ofstream deletedFlux(deletedList.c_str(), ios::app);
+
+	if (transfersFlux && loansFlux && costumersFlux && deletedFlux) {
+
+		// list of clients...
+		costumersFlux << accounts.size() << endl;
+		costumersFlux << "$ Date -> " << getTime() << " ;" << endl;
+		for (size_t i = 0; i < accounts.size(); i++) {
+			costumersFlux << "--- === ---" << endl;
+			costumersFlux << accounts[i].m_accountNumber << endl;
+			costumersFlux << accounts[i].m_name << endl;
+			costumersFlux << accounts[i].m_nasNumber << endl;
+			costumersFlux << accounts[i].m_adress << endl;
+			costumersFlux << accounts[i].m_phoneNumber << endl;
+			costumersFlux << accounts[i].m_typeOfAccount << endl;
+			costumersFlux << accounts[i].m_accountBalance << endl;
+			costumersFlux << accounts[i].m_loanBalance << endl;
+			costumersFlux << accounts[i].m_password << endl;
+			costumersFlux << accounts[i].m_reasonOfLoan << endl;
+			costumersFlux << accounts[i].m_reasonOfDeletion << endl;
+			costumersFlux << accounts[i].m_timeOfsaving << endl;
+			costumersFlux << accounts[i].m_timeOfCreation << endl;
+			costumersFlux << accounts[i].m_timeOfDelete << endl;
+			costumersFlux << "--- === ---" << endl;
+		}
+		costumersFlux << endl;
+
+		// list of deleted accounts...
+		
+		deletedFlux << "$ Date -> " << getTime() << " ;" << endl;
+		deletedFlux << deletedAccounts.size() << endl;
+		for (size_t i = 0; i < deletedAccounts.size(); i++) {
+			deletedFlux << "--- === ---" << endl;
+			deletedFlux << deletedAccounts[i].m_accountNumber << endl;
+			deletedFlux << deletedAccounts[i].m_name << endl;
+			deletedFlux << deletedAccounts[i].m_nasNumber << endl;
+			deletedFlux << deletedAccounts[i].m_adress << endl;
+			deletedFlux << deletedAccounts[i].m_phoneNumber << endl;
+			deletedFlux << deletedAccounts[i].m_typeOfAccount << endl;
+			deletedFlux << deletedAccounts[i].m_accountBalance << endl;
+			deletedFlux << deletedAccounts[i].m_loanBalance << endl;
+			deletedFlux << deletedAccounts[i].m_password << endl;
+			deletedFlux << deletedAccounts[i].m_reasonOfLoan << endl;
+			deletedFlux << deletedAccounts[i].m_reasonOfDeletion << endl;
+			deletedFlux << deletedAccounts[i].m_timeOfsaving << endl;
+			deletedFlux << deletedAccounts[i].m_timeOfCreation << endl;
+			deletedFlux << deletedAccounts[i].m_timeOfDelete << endl;
+			deletedFlux << "--- === ---" << endl;
+		}
+		deletedFlux << endl;
+
+		// transfers log...
+		transfersFlux << "$ Date -> " << getTime() << " ;" << endl;
+		transfersFlux << transfer.size() << endl;
+		for (size_t i = 0; i < transfer.size(); i++) {
+
+			transfersFlux << transfer[i] << endl;
+
+		};
+		transfersFlux << endl;
+
+		// loans log...
+		loansFlux << "$ Date -> " << getTime() << " ;" << endl;
+		loansFlux << loan.size() << endl;
+		for (size_t i = 0; i < loan.size(); i++) {
+
+			loansFlux << loan[i] << endl;
+
+		};
+		loansFlux << endl;
+
+	}
+	else {
+
+		cout << "[ERROR] : A problem with the files has occured!" << endl 
+			 << "[CRITICAL] : NO DATA WILL BE SAVED !!!" << endl
+			 << "[WARNING] : PROGRAM WILL BE SHUT DOWN !" 
+			 << "[CRITICAL] : Please make sure all the file of the program are not currupted" << endl
+			 << "[INFO] : You will be exited of the program automatically in 5s" << endl;
+		
+		system("PAUSE");
+		Sleep(5000);
+		//system("exit");
+	}
+
+}
+
+void getData(vector<string>& transfer, vector<string>& loan, vector<client>& accounts, vector<client>& deletedAccounts)
+{
+
+	const string transferHistory("Log/Transfer.txt");
+	const string loanHistory("Log/Loan.txt");
+	const string costumerList("Log/Accounts.txt");
+	const string deletedList("Log/Deleted.txt");
+
+	ifstream transfersFlux(transferHistory.c_str(), ios::app);
+	ifstream loansFlux(loanHistory.c_str(), ios::app);
+	ifstream costumersFlux(costumerList.c_str(), ios::app);
+	ifstream deletedFlux(deletedList.c_str(), ios::app);
+
+	if (transfersFlux && loansFlux && costumersFlux && deletedFlux) {
+
+		string num = "";
+		string verifyBegining = "";
+		string line = "";
+		string dump = "";
+		int round = 0;
+		// list of clients...
+		getline(costumersFlux, num);
+		if (num != "\0") {
+			getline(costumersFlux, dump);
+			for (int i = 0; i <= stoi(num); i++) {
+				getline(costumersFlux, verifyBegining);
+				if (verifyBegining[0] == '-') {
+					accounts.push_back(client());
+					getline(costumersFlux, line);
+					accounts[i].m_accountNumber = stoi(line);
+					getline(costumersFlux, accounts[i].m_name);
+					getline(costumersFlux, accounts[i].m_nasNumber);
+					getline(costumersFlux, accounts[i].m_adress);
+					getline(costumersFlux, accounts[i].m_phoneNumber);
+					getline(costumersFlux, accounts[i].m_typeOfAccount);
+					getline(costumersFlux, line);
+					accounts[i].m_accountBalance = stod(line);
+					getline(costumersFlux, line);
+					accounts[i].m_loanBalance = stod(line);
+					getline(costumersFlux, line);
+					accounts[i].m_password = stoi(line);
+					getline(costumersFlux, accounts[i].m_reasonOfLoan);
+					getline(costumersFlux, accounts[i].m_reasonOfDeletion);
+					getline(costumersFlux, line);
+					accounts[i].m_timeOfsaving = stoi(line);
+					getline(costumersFlux, accounts[i].m_timeOfCreation);
+					getline(costumersFlux, accounts[i].m_timeOfDelete);
+					getline(costumersFlux, dump);
+				}
+			}
+		}
+		else {
+			cout << "empty" << endl;
+		}
+		system("PAUSE");
+		// list of deleted accounts...
+		
+
+		// transfers log...
+		
+
+		// loans log...
+		
+		costumersFlux.close();
+	}
+	else {
+
+		cout << "[ERROR] : A problem with the files has occured!" << endl
+			<< "[CRITICAL] : NO DATA WILL BE SAVED !!!" << endl
+			<< "[WARNING] : PROGRAM WILL BE SHUT DOWN !"
+			<< "[CRITICAL] : Please make sure all the file of the program are not currupted" << endl
+			<< "[INFO] : You will be exited of the program automatically in 5s" << endl;
+
+		system("PAUSE");
+		Sleep(5000);
+		//system("exit");
+	}
+
+
 }
