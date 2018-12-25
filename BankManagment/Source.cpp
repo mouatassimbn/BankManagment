@@ -1,5 +1,5 @@
 /*
-                     Programed by :      Mouatassim Boulahsen
+                     Programed by :      Mouatassim Bn
 					 Date :              19/12/2018
 					 Goal :              A bank management software...
 					 Bank Name :         MSBN
@@ -1061,6 +1061,7 @@ string cryptData(string word)
 }
 string unCryptData(string word)
 {
+	// Still searching for a better algorithm to crypt my data and uncrypt it
 	return string();
 }
 ;
